@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TARTARIUM AI // SCIENCE_AI_BOX CORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #090514; color: #f4f4f5; }
+        .tartarium-biblio {
+            font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+            border-left: 3px solid #10b981;
+            background-color: rgba(30, 27, 75, 0.6);
+        }
+        .tartarium-footer-notes {
+            border-top: 1px dotted #a855f7;
+            background-color: rgba(15, 23, 42, 0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 font-sans">
+    <div class="max-w-7xl mx-auto bg-zinc-950/90 border border-purple-800/70 rounded-xl shadow-2xl overflow-hidden">
+        <!-- Cabeçalho -->
+        <header class="p-5 border-b border-purple-900/80 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-purple-950/30">
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold font-mono tracking-wider text-purple-300">
+                    TARTARIUM AI <span class="text-emerald-400">//</span> SCIENCE_AI_BOX CORE
+                </h1>
+                <p class="text-xs text-purple-400/80 font-mono mt-1">
+                    Beaugrande & Dressler • Dewey Silos • ScienceAI_Box Public Repository • ToV Sovereign Protocol
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <input id="apiKeyInput" type="password" value="TARTARIUM_DEV_SANDBOX_KEY" placeholder="X-API-Key"
+                    class="bg-zinc-900 border border-purple-700 text-xs text-emerald-300 px-3 py-1.5 rounded font-mono focus:outline-none focus:border-emerald-400">
+                <select id="tovSelector" class="bg-zinc-900 border border-emerald-500 text-emerald-400 text-xs font-mono px-3 py-1.5 rounded">
+                    <option value="SANDBOX">SANDBOX (SIMULAÇÃO)</option>
+                    <option value="VERITAS">VERITAS (MUNDO REAL)</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Barra de Navegação -->
+        <nav class="grid grid-cols-2 border-b border-purple-900/80 font-mono text-xs">
+            <button id="tabPrompt" onclick="switchTab('prompt')" class="py-3 text-center border-b-2 border-transparent text-purple-300 hover:bg-purple-900/20">
+                Prompt_Box (Textual)
+            </button>
+            <button id="tabScience" onclick="switchTab('science')" class="py-3 text-center bg-purple-700/40 border-b-2 border-emerald-400 text-white font-bold">
+                ScienceAI_Box (Teses)
+            </button>
+        </nav>
+
+        <!-- Painel Principal -->
+        <main class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Coluna Esquerda: Formulários -->
+            <div class="lg:col-span-5 space-y-4">
+                <!-- Formulário ScienceAI_Box -->
+                <div id="panelScience" class="space-y-3">
+                    <h2 class="text-sm font-mono font-bold text-purple-300">ScienceAI_Box // Registro de Teses</h2>
+                    <div>
+                        <label class="block text-[11px] text-purple-400 mb-1">Categoria do Registro</label>
+                        <select id="scienceCategory" class="w-full bg-zinc-900 border border-purple-800 rounded p-2 text-xs text-zinc-200">
+                            <option value="tese">tese</option>
+                            <option value="descoberta">descoberta</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-purple-400 mb-1">Título da Tese / Descoberta</label>
+                        <input id="scienceTitle" type="text" placeholder="Ex: Silos Estanques Dewey e Eliminação do Atrito Térmico"
+                            class="w-full bg-zinc-900 border border-purple-800 rounded p-2 text-xs text-zinc-200 focus:border-emerald-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-purple-400 mb-1">Tags (separadas por vírgula)</label>
+                        <input id="scienceTags" type="text" value="GreenAI, SilosDewey, 7B, AtritoTermico"
+                            class="w-full bg-zinc-900 border border-purple-800 rounded p-2 text-xs text-zinc-200 focus:border-emerald-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-purple-400 mb-1">Conteúdo da Tese / Descoberta</label>
+                        <textarea id="scienceContent" rows="5" placeholder="Descreva a fundamentação técnica..."
+                            class="w-full bg-zinc-900 border border-purple-800 rounded p-2 text-xs text-zinc-200 focus:border-emerald-400 focus:outline-none"></textarea>
+                    </div>
+                    <button onclick="registerScience()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold font-mono text-xs rounded transition">
+                        Certificar & Registrar no ScienceAI_Box
+                    </button>
+                </div>
+
+                <!-- Formulário Prompt_Box -->
+                <div id="panelPrompt" class="hidden space-y-3">
+                    <h2 class="text-sm font-mono font-bold text-purple-300">Prompt_Box // Inferência Textual 7B</h2>
+                    <div>
+                        <label class="block text-[11px] text-purple-400 mb-1">Tipo Textual</label>
+                        <select id="textTypeSelect" class="w-full bg-zinc-900 border border-purple-800 rounded p-2 text-xs text-zinc-200">
+                            <option value="Dissertativo-Argumentativo">Dissertativo-Argumentativo</option>
+                            <option value="Expositivo-Técnico">Expositivo-Técnico</option>
+                            <option value="Analítico-Soberano">Analítico-Soberano</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-purple-400 mb-1">Consulta / Payload Textual</label>
+                        <textarea id="promptInput" rows="6" placeholder="Insira o comando ou texto para auditoria..."
+                            class="w-full bg-zinc-900 border border-purple-800 rounded p-2 text-xs text-zinc-200 focus:border-emerald-400 focus:outline-none"></textarea>
+                    </div>
+                    <button onclick="executePrompt()" class="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold font-mono text-xs rounded transition">
+                        Executar Inferência Certificada
+                    </button>
+                </div>
+            </div>
+
+            <!-- Coluna Direita: Filtro e Console Soberano -->
+            <div class="lg:col-span-7 space-y-4 border-t lg:border-t-0 lg:border-l border-purple-900/60 pt-4 lg:pt-0 lg:pl-6">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input id="searchInput" type="text" placeholder="Palavra-chave ou Elo SHA-256"
+                        class="flex-1 bg-zinc-900 border border-purple-800 rounded px-3 py-1.5 text-xs text-zinc-200">
+                    <input id="tagFilterInput" type="text" placeholder="Filtrar por Tag"
+                        class="w-full sm:w-40 bg-zinc-900 border border-purple-800 rounded px-3 py-1.5 text-xs text-zinc-200">
+                    <button onclick="loadRepository()" class="px-4 py-1.5 bg-purple-800 hover:bg-purple-700 text-emerald-300 font-mono text-xs rounded border border-emerald-500/40">
+                        Sincronizar
+                    </button>
+                </div>
+
+                <div id="outputConsole" class="bg-zinc-950 border border-purple-900/80 rounded-lg p-4 min-h-[380px] max-h-[540px] overflow-y-auto space-y-3 text-xs">
+                    <p class="text-purple-400 font-mono">[*] Console pronto. Clique em "Sincronizar" para listar o ScienceAI_Box ou registre uma nova tese.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const getHeaders = () => ({
+            'Content-Type': 'application/json',
+            'X-API-Key': document.getElementById('apiKeyInput').value.trim()
+        });
+
+        function switchTab(tab) {
+            const isScience = tab === 'science';
+            document.getElementById('panelScience').classList.toggle('hidden', !isScience);
+            document.getElementById('panelPrompt').classList.toggle('hidden', isScience);
+            document.getElementById('tabScience').className = isScience
+                ? 'py-3 text-center bg-purple-700/40 border-b-2 border-emerald-400 text-white font-bold'
+                : 'py-3 text-center border-b-2 border-transparent text-purple-300 hover:bg-purple-900/20';
+            document.getElementById('tabPrompt').className = !isScience
+                ? 'py-3 text-center bg-purple-700/40 border-b-2 border-emerald-400 text-white font-bold'
+                : 'py-3 text-center border-b-2 border-transparent text-purple-300 hover:bg-purple-900/20';
+        }
+
+        async function registerScience() {
+            const payload = {
+                categoria: document.getElementById('scienceCategory').value,
+                titulo: document.getElementById('scienceTitle').value.trim(),
+                tags: document.getElementById('scienceTags').value.split(',').map(t => t.trim()).filter(Boolean),
+                conteudo: document.getElementById('scienceContent').value.trim(),
+                tov_mode: document.getElementById('tovSelector').value
+            };
+            if (!payload.titulo || !payload.conteudo) return alert('Preencha título e conteúdo.');
+
+            const res = await fetch('/api/v1/science/register', {
+                method: 'POST', headers: getHeaders(), body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            const box = document.getElementById('outputConsole');
+            if (res.ok) {
+                box.innerHTML = `<div class="p-3 bg-purple-950/80 border border-emerald-500 rounded text-emerald-300 font-mono">[SUCESSO] Registrado com Elo SHA-256: <strong>${data.elo_id}</strong></div>`;
+                loadRepository();
+            } else {
+                box.innerHTML = `<p class="text-rose-400 font-mono">[ERRO]: ${data.detail}</p>`;
+            }
+        }
+
+        async function loadRepository() {
+            const busca = encodeURIComponent(document.getElementById('searchInput').value.trim());
+            const tag = encodeURIComponent(document.getElementById('tagFilterInput').value.trim());
+            const res = await fetch(`/api/v1/science/list?busca=${busca}&tag=${tag}`, { headers: getHeaders() });
+            const data = await res.json();
+            const box = document.getElementById('outputConsole');
+
+            if (!res.ok) return box.innerHTML = `<p class="text-rose-400 font-mono">[ERRO]: ${data.detail}</p>`;
+            if (!data.resultados.length) return box.innerHTML = `<p class="text-purple-400 font-mono">[VAZIO] Nenhum artefato encontrado.</p>`;
+
+            box.innerHTML = data.resultados.map(item => `
+                <div class="bg-purple-950/30 border border-purple-700/60 hover:border-emerald-500/70 p-4 rounded-lg space-y-2 transition">
+                    <div class="flex justify-between items-center">
+                        <span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-emerald-950 text-emerald-400 border border-emerald-700">${item.categoria}</span>
+                        <span class="px-2 py-0.5 text-[10px] font-mono rounded bg-purple-900 text-purple-200 border border-purple-700">TOV: ${item.tov_mode}</span>
+                    </div>
+                    <h3 class="text-sm font-bold text-zinc-100 font-mono">${item.titulo}</h3>
+                    <div class="text-[11px] font-mono text-emerald-300">ELO SHA-256: <code class="bg-purple-900/60 px-1.5 py-0.5 rounded">${item.elo_id}</code></div>
+                    <p class="text-xs text-zinc-300 border-l-2 border-emerald-500 pl-3 italic">${item.conteudo}</p>
+                    <div class="flex flex-wrap gap-1 pt-1">
+                        ${item.tags.map(t => `<span class="px-1.5 py-0.5 bg-purple-900/70 text-purple-200 text-[10px] rounded">#${t}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function executePrompt() {
+            const payload = {
+                texto_base: document.getElementById('promptInput').value.trim(),
+                tipo_textual: document.getElementById('textTypeSelect').value,
+                tov_mode: document.getElementById('tovSelector').value
+            };
+            if (!payload.texto_base) return alert('Insira uma consulta na Prompt_Box.');
+
+            const res = await fetch('/api/v1/tartarium/text-infer', {
+                method: 'POST', headers: getHeaders(), body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            const box = document.getElementById('outputConsole');
+            if (!res.ok) return box.innerHTML = `<p class="text-rose-400 font-mono">[ERRO]: ${data.detail}</p>`;
+
+            box.innerHTML = `
+                <div class="p-3 bg-purple-950/40 border border-purple-800 rounded-lg space-y-2">
+                    <span class="px-2 py-0.5 text-[10px] font-bold rounded bg-emerald-950 text-emerald-400 border border-emerald-700">${data.tipo_textual}</span>
+                    <p class="whitespace-pre-wrap text-zinc-200 font-sans pt-1">${data.response_certificada}</p>
+                </div>
+                <div class="tartarium-biblio p-3 rounded-md space-y-1 text-zinc-300">
+                    <p class="font-bold text-emerald-400 text-[10px]">[BIBLIO_REF] - Índice de Referências</p>
+                    ${data.bloco_bibliografico.map(b => `<p class="italic">• <strong>${b.fonte}</strong>: ${b.descricao}</p>`).join('')}
+                </div>
+                <div class="tartarium-footer-notes p-3 rounded-md space-y-1 text-[11px] text-purple-200">
+                    <p class="font-bold text-purple-400 text-[9px]">[RODAPÉ_NODE] - Notas Metodológicas</p>
+                    ${data.bloco_rodape.map(r => `<p><sup>[${r.indice}]</sup> ${r.nota}</p>`).join('')}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
